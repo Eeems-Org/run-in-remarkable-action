@@ -23,6 +23,13 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Checkout rm-docker repository
+      uses: actions/checkout@v4
+      with:
+        repository: timower/rM-docker
+        ref: 2593f981f0264d0b6dba49192044ce9cd312bfce
+        fetch-depth: 1
+        path: .rm-docker-repo
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Prep build
@@ -30,8 +37,9 @@ runs:
       run: |
         cd "${{ github.action_path }}"
         mkdir -p "${{ runner.temp }}/rira"
+        cp -l "${{ github.action_path }}/entrypoint.sh" "${{ runner.temp }}/rira/"
         sed '
-          /#insert=rm-docker\/Dockerfile/r rm-docker/Dockerfile
+          /#insert=rm-docker\/Dockerfile/r ${{ github.workspace }}/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
         ' Dockerfile.in > "${{ runner.temp }}/rira/build.Dockerfile"
         echo "#!/bin/sh" > "${{ runner.temp }}/rira/build.sh"
@@ -55,7 +63,7 @@ runs:
           fw_version=${{ inputs.fw_version }}
         build-contexts: |
           gha=${{ runner.temp }}/rira
-        context: ${{ github.action_path }}
+        context: ${{ github.workspace }}/.rm-docker-repo
         file: ${{ runner.temp }}/rira/build.Dockerfile
     - name: Build codexctl
       shell: bash

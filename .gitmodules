@@ -1,3 +1,0 @@
-[submodule "rm-docker"]
-	path = rm-docker
-	url = https://github.com/timower/rM-docker.git

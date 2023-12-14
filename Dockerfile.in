@@ -33,5 +33,5 @@ RUN <<EOT
     save_vm.sh
 EOT
 
-ADD entrypoint.sh /opt/bin/entrypoint.sh
+COPY --from=gha entrypoint.sh /opt/bin/entrypoint.sh
 CMD entrypoint.sh
