@@ -37,7 +37,7 @@ runs:
       run: |
         cd "${{ github.action_path }}"
         mkdir -p "${{ runner.temp }}/rira"
-        cp -l "${{ github.action_path }}/entrypoint.sh" "${{ runner.temp }}/rira/"
+        cp -al "${{ github.action_path }}/entrypoint.sh" "${{ runner.temp }}/rira/"
         sed '
           /#insert=rm-docker\/Dockerfile/r ${{ github.workspace }}/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
