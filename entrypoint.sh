@@ -9,12 +9,13 @@ wait_ssh.sh
 
 rsync -avr \
   --exclude ".git" \
+  --exclude ".rm-docker-repo" \
   --filter=':- .gitignore' \
-  /src \
+  /src/. \
   root@localhost:/src
 
 ssh root@localhost 'bash -l -c /opt/bin/build.sh'
 
-rsync -avr root@localhost:/src /src
+rsync -avr root@localhost:/src/. /src
 
 save_vm.sh
