@@ -42,10 +42,10 @@ runs:
           /#insert=rm-docker\/Dockerfile/r ${{ github.workspace }}/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
         ' Dockerfile.in > "${{ runner.temp }}/rira/build.Dockerfile"
-        echo "#!/bin/sh" > "${{ runner.temp }}/rira/build.sh"
-        echo "cd /opt/tmp/src" >> "${{ runner.temp }}/rira/build.sh"
-        echo "$script" >> "${{ runner.temp }}/rira/build.sh"
-        chmod +x "${{ runner.temp }}/rira/build.sh"
+        echo "#!/bin/sh" > "${{ runner.temp }}/rira/run.sh"
+        echo "cd /opt/tmp/src" >> "${{ runner.temp }}/rira/run.sh"
+        echo "$script" >> "${{ runner.temp }}/rira/run.sh"
+        chmod +x "${{ runner.temp }}/rira/run.sh"
         echo "#!/bin/sh" > "${{ runner.temp }}/rira/setup.sh"
         echo "$setup" >> "${{ runner.temp }}/rira/setup.sh"
         chmod +x "${{ runner.temp }}/rira/setup.sh"

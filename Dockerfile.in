@@ -22,14 +22,14 @@ RUN <<EOT
     save_vm.sh
 EOT
 
-COPY --from=gha build.sh /opt/build.sh
+COPY --from=gha run.sh /opt/run.sh
 
 RUN <<EOT
     set -ex
     run_vm.sh -serial null -daemonize
     wait_ssh.sh
-    scp /opt/build.sh root@localhost:/opt/bin
-    rm /opt/build.sh
+    scp /opt/run.sh root@localhost:/opt/bin
+    rm /opt/run.sh
     save_vm.sh
 EOT
 

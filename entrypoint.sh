@@ -14,7 +14,7 @@ rsync -avr \
   /src/. \
   root@localhost:/opt/tmp/src
 
-ssh root@localhost 'bash -l -c /opt/bin/build.sh'
+ssh root@localhost 'bash -l -c /opt/bin/run.sh'
 
 rsync -avr root@localhost:/opt/tmp/src/. /src
 
