@@ -32,6 +32,7 @@ runs:
         path: ${{ github.action_path }}/rm-docker
         fetch-depth: 1
     - name: Prep build
+      shell: bash
       run: |
         cd "${{ github.action_path }}"
         cp -lr scripts rm-docker
@@ -61,6 +62,7 @@ runs:
           fw_version=${{ inputs.fw_version }}
         context: rm-docker
     - name: Build codexctl
+      shell: bash
       run: |
         docker run \
           --rm \
