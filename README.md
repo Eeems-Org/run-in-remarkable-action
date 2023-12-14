@@ -9,7 +9,7 @@ Run a script in a remarkable tablet qemu image.
 
 # Usage
 ```yaml
-- action: Eeems-Org/run-in-remarkable-action@1
+- uses: Eeems-Org/run-in-remarkable-action@v1
   with:
     run: |
         set -eu
