@@ -1,0 +1,68 @@
+name: 'Run-in-reMarkable-Action'
+description: Run a script in a reMarkable tablet QEMU instance
+author: Eeems
+branding:
+  icon: tablet
+  color: white
+inputs:
+  run:
+    description: Script to execute in the QEMU instance
+    required: true
+  setup:
+    description: Script to execute during docker image build so that it can be cached between runs
+    required: false
+    default: ''
+  path:
+    description: Folder to sync with the device. This will be available at /src
+    required: false
+    default: ${{ github.workspace }}
+  fw_version:
+    description: reMarkable OS version to run in
+    required: false
+    default: 2.15.1
+runs:
+  using: composite
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Checkout the rM-docker repository
+      uses: actions/checkout@v4
+      with:
+        repository: timower/rM-docker
+        path: ${{ github.action_path }}/rm-docker
+        fetch-depth: 1
+    - name: Prep build
+      run: |
+        cd "${{ github.action_path }}"
+        cp -lr scripts rm-docker
+        mv rm-docker/Dockerfile rm-docker/Dockerfile.in
+        sed '
+          /#insert=rm-docker\/Dockerfile\.in/r rm-docker/Dockerfile.in
+          /#insert=rm-docker\/Dockerfile\.in/d
+        ' Dockerfile.in > rm-docker/Dockerfile
+        echo "#!/bin/sh" > scripts/build.sh
+        echo "$script" >> scripts/build.sh
+        chmod +x scripts/build.sh
+        echo "#!/bin/sh" > scripts/setup.sh
+        echo "$setup" >> scripts/setup.sh
+        chmod +x scripts/setup.sh
+      env:
+        script: ${{ inputs.run }}
+        setup: ${{ inputs.setup }}
+    - name: Build image
+      uses: docker/build-push-action@v5
+      with:
+        tags: rm-docker:run-in-remarkable-action
+        target: run-in-remarkable-action
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          fw_version=${{ inputs.fw_version }}
+        context: rm-docker
+    - name: Build codexctl
+      run: |
+        docker run \
+          --rm \
+          -v ${{ inputs.path }}:/src \
+          rm-docker:run-in-remarkable-action
