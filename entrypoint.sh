@@ -12,10 +12,10 @@ rsync -avr \
   --exclude ".rm-docker-repo" \
   --filter=':- .gitignore' \
   /src/. \
-  root@localhost:/src
+  root@localhost:/opt/tmp/src
 
 ssh root@localhost 'bash -l -c /opt/bin/build.sh'
 
-rsync -avr root@localhost:/src/. /src
+rsync -avr root@localhost:/opt/tmp/src/. /src
 
 save_vm.sh

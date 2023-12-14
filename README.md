@@ -2,9 +2,9 @@
 Run a script in a remarkable tablet qemu image.
 
 # Inputs
-- `run` - Script to execute in the QEMU instance
+- `run` - Script to execute in the QEMU instance. This will be run in `/opt/tmp/src`
 - `setup` - Script to execute during docker image build so that it can be cached between runs
-- `path` - Folder to sync with the device. This will be available at `/src`
+- `path` - Folder to sync with the device. This will be available at `/opt/tmp/src`
 - `fw_version` - reMarkable OS version to run in
 
 # Usage
@@ -13,7 +13,6 @@ Run a script in a remarkable tablet qemu image.
   with:
     run: |
         set -eu
-        cd /src
         echo "Installing dependencies"
         python -m pip install -r requirements.txt
         echo "Building codexctl"

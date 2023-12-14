@@ -43,6 +43,7 @@ runs:
           /#insert=rm-docker\/Dockerfile/d
         ' Dockerfile.in > "${{ runner.temp }}/rira/build.Dockerfile"
         echo "#!/bin/sh" > "${{ runner.temp }}/rira/build.sh"
+        echo "cd /opt/tmp/src" >> "${{ runner.temp }}/rira/build.sh"
         echo "$script" >> "${{ runner.temp }}/rira/build.sh"
         chmod +x "${{ runner.temp }}/rira/build.sh"
         echo "#!/bin/sh" > "${{ runner.temp }}/rira/setup.sh"
