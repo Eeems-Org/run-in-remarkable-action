@@ -1,5 +1,5 @@
 #syntax=docker/dockerfile:1.4
-#insert=rm-docker/Dockerfile.in
+#insert=rm-docker/Dockerfile
 
 FROM qemu-toltec as run-in-remarkable-action
 
@@ -11,7 +11,7 @@ RUN <<EOT
     rm -rf /var/lib/apt/lists/*
 EOT
 
-ADD scripts/setup.sh /opt/setup.sh
+COPY --from=gha setup.sh /opt/setup.sh
 
 RUN <<EOT
     set -ex
@@ -22,7 +22,7 @@ RUN <<EOT
     save_vm.sh
 EOT
 
-ADD scripts/build.sh /opt/build.sh
+COPY --from=gha build.sh /opt/build.sh
 
 RUN <<EOT
     set -ex

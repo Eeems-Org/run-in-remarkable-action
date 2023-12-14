@@ -25,28 +25,21 @@ runs:
   steps:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    - name: Checkout the rM-docker repository
-      uses: actions/checkout@v4
-      with:
-        repository: timower/rM-docker
-        path: ${{ github.action_path }}/rm-docker
-        fetch-depth: 1
     - name: Prep build
       shell: bash
       run: |
         cd "${{ github.action_path }}"
-        cp -lr scripts rm-docker
-        mv rm-docker/Dockerfile rm-docker/Dockerfile.in
+        mkdir -p "${{ runner.temp }}/rira"
         sed '
-          /#insert=rm-docker\/Dockerfile\.in/r rm-docker/Dockerfile.in
-          /#insert=rm-docker\/Dockerfile\.in/d
-        ' Dockerfile.in > rm-docker/Dockerfile
-        echo "#!/bin/sh" > scripts/build.sh
-        echo "$script" >> scripts/build.sh
-        chmod +x scripts/build.sh
-        echo "#!/bin/sh" > scripts/setup.sh
-        echo "$setup" >> scripts/setup.sh
-        chmod +x scripts/setup.sh
+          /#insert=rm-docker\/Dockerfile/r rm-docker/Dockerfile
+          /#insert=rm-docker\/Dockerfile/d
+        ' Dockerfile.in > "${{ runner.temp }}/rira/build.Dockerfile"
+        echo "#!/bin/sh" > "${{ runner.temp }}/rira/build.sh"
+        echo "$script" >> "${{ runner.temp }}/rira/build.sh"
+        chmod +x "${{ runner.temp }}/rira/build.sh"
+        echo "#!/bin/sh" > "${{ runner.temp }}/rira/setup.sh"
+        echo "$setup" >> "${{ runner.temp }}/rira/setup.sh"
+        chmod +x "${{ runner.temp }}/rira/setup.sh"
       env:
         script: ${{ inputs.run }}
         setup: ${{ inputs.setup }}
@@ -60,7 +53,10 @@ runs:
         cache-to: type=gha,mode=max
         build-args: |
           fw_version=${{ inputs.fw_version }}
-        context: rm-docker
+        build-contexts: |
+          gha=${{ runner.temp }}/rira
+        context: ${{ github.action_path }}
+        file: ${{ runner.temp }}/rira/build.Dockerfile
     - name: Build codexctl
       shell: bash
       run: |
