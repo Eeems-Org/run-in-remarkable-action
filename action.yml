@@ -35,23 +35,26 @@ runs:
     - name: Prep build
       shell: bash
       run: |
-        cd "${{ github.action_path }}"
-        mkdir -p "${{ runner.temp }}/rira"
-        cp -al "${{ github.action_path }}/entrypoint.sh" "${{ runner.temp }}/rira/"
-        sed '
-          /#insert=rm-docker\/Dockerfile/r ${{ github.workspace }}/.rm-docker-repo/Dockerfile
+        cd "$action"
+        mkdir -p "$temp/rira"
+        cp -al "entrypoint.sh" "$tmp/rira/"
+        sed "
+          /#insert=rm-docker\/Dockerfile/r $workspace/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
-        ' Dockerfile.in > "${{ runner.temp }}/rira/build.Dockerfile"
-        echo "#!/bin/sh" > "${{ runner.temp }}/rira/run.sh"
-        echo "cd /opt/tmp/src" >> "${{ runner.temp }}/rira/run.sh"
-        echo "$script" >> "${{ runner.temp }}/rira/run.sh"
-        chmod +x "${{ runner.temp }}/rira/run.sh"
-        echo "#!/bin/sh" > "${{ runner.temp }}/rira/setup.sh"
-        echo "$setup" >> "${{ runner.temp }}/rira/setup.sh"
-        chmod +x "${{ runner.temp }}/rira/setup.sh"
+        " Dockerfile.in > "$temp/rira/build.Dockerfile"
+        echo "#!/bin/sh" > "$temp/rira/run.sh"
+        echo "cd /opt/tmp/src" >> "$temp/rira/run.sh"
+        echo "$script" >> "$temp/rira/run.sh"
+        chmod +x "$temp/rira/run.sh"
+        echo "#!/bin/sh" > "$temp/rira/setup.sh"
+        echo "$setup" >> "$temp/rira/setup.sh"
+        chmod +x "$temp/rira/setup.sh"
       env:
         script: ${{ inputs.run }}
         setup: ${{ inputs.setup }}
+        workspace: ${{ github.workspace }}
+        temp: ${{ runner.temp }}
+        action: ${{ github.action_path }}
     - name: Build image
       uses: docker/build-push-action@v5
       with:
@@ -69,10 +72,11 @@ runs:
     - name: Build codexctl
       shell: bash
       run: |
-        cd "${{ github.workspace }}"
+        cd "$workspace"
         docker run \
           --rm \
-          -v "$path":/src \
+          -v "$src_path":/src \
           rm-docker:run-in-remarkable-action
       env:
-        path: ${{ inputs.path }}
+        src_path: ${{ inputs.path }}
+        workspace: ${{ github.workspace }}
