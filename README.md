@@ -1,7 +1,13 @@
 # run-in-remarkable-action
-Run a script in a remarkable tablet qemu image
+Run a script in a remarkable tablet qemu image.
 
-# Example
+# Inputs
+- `run` - Script to execute in the QEMU instance
+- `setup` - Script to execute during docker image build so that it can be cached between runs
+- `path` - Folder to sync with the device. This will be available at `/src`
+- `fw_version` - reMarkable OS version to run in
+
+# Usage
 ```yaml
 - action: Eeems-Org/run-in-remarkable-action@1
   with:
