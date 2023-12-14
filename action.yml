@@ -69,7 +69,10 @@ runs:
     - name: Build codexctl
       shell: bash
       run: |
+        cd "${{ github.workspace }}"
         docker run \
           --rm \
-          -v ${{ inputs.path }}:/src \
+          -v "$path":/src \
           rm-docker:run-in-remarkable-action
+      env:
+        path: ${{ inputs.path }}
