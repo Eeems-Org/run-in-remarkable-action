@@ -62,6 +62,7 @@ runs:
         action: ${{ github.action_path }}
     - name: Clean old buildx cache
       if: ${{ inputs.clean_cache }}
+      shell: bash
       run: |
         docker buildx prune -f
         docker image prune -f
