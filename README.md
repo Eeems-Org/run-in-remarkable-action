@@ -6,6 +6,7 @@ Run a script in a remarkable tablet qemu image.
 - `setup` - Script to execute during docker image build so that it can be cached between runs
 - `path` - Folder to sync with the device. This will be available at `/opt/tmp/src`
 - `fw_version` - reMarkable OS version to run in
+- `clean_cache` - Clean the local docker cache before running
 
 # Usage
 ```yaml
