@@ -40,24 +40,24 @@ runs:
     - name: Prep build
       shell: bash
       run: |
-        mkdir -p "$temp/rira"
+        mkdir -p "$temp_dir/rira"
         cp -al "$action/entrypoint.sh" "$tmp/rira/entrypoint.sh"
         sed "
           /#insert=rm-docker\/Dockerfile/r $workspace/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
-        " "$action/Dockerfile.in" > "$temp/rira/build.Dockerfile"
-        echo "#!/bin/sh" > "$temp/rira/run.sh"
-        echo "cd /opt/tmp/src" >> "$temp/rira/run.sh"
-        echo "$script" >> "$temp/rira/run.sh"
-        chmod +x "$temp/rira/run.sh"
-        echo "#!/bin/sh" > "$temp/rira/setup.sh"
-        echo "$setup" >> "$temp/rira/setup.sh"
-        chmod +x "$temp/rira/setup.sh"
+        " "$action/Dockerfile.in" > "$temp_dir/rira/build.Dockerfile"
+        echo "#!/bin/sh" > "$temp_dir/rira/run.sh"
+        echo "cd /opt/tmp/src" >> "$temp_dir/rira/run.sh"
+        echo "$script" >> "$temp_dir/rira/run.sh"
+        chmod +x "$temp_dir/rira/run.sh"
+        echo "#!/bin/sh" > "$temp_dir/rira/setup.sh"
+        echo "$setup" >> "$temp_dir/rira/setup.sh"
+        chmod +x "$temp_dir/rira/setup.sh"
       env:
         script: ${{ inputs.run }}
         setup: ${{ inputs.setup }}
         workspace: ${{ github.workspace }}
-        temp: ${{ runner.temp }}
+        temp_dir: ${{ runner.temp }}
         action: ${{ github.action_path }}
     - name: Clean old buildx cache
       if: ${{ inputs.clean_cache }}
