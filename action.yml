@@ -20,6 +20,11 @@ inputs:
     description: reMarkable OS version to run in
     required: false
     default: 2.15.1
+  clean_cache:
+    description: Clean the cache before running
+    required: false
+    type: boolean
+    default: false
 runs:
   using: composite
   steps:
@@ -55,6 +60,11 @@ runs:
         workspace: ${{ github.workspace }}
         temp: ${{ runner.temp }}
         action: ${{ github.action_path }}
+    - name: Clean old buildx cache
+      if: ${{ inputs.clean_cache }}
+      run: |
+        docker buildx prune -f
+        docker image prune -f
     - name: Build image
       uses: docker/build-push-action@v5
       with:
