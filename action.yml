@@ -42,7 +42,7 @@ runs:
       run: |
         cd "$action"
         mkdir -p "$temp/rira"
-        cp -al "entrypoint.sh" "$tmp/rira/"
+        cp -al "entrypoint.sh" "$tmp/rira/entrypoint.sh"
         sed "
           /#insert=rm-docker\/Dockerfile/r $workspace/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
