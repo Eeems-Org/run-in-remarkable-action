@@ -40,13 +40,12 @@ runs:
     - name: Prep build
       shell: bash
       run: |
-        cd "$action"
         mkdir -p "$temp/rira"
-        cp -al "entrypoint.sh" "$tmp/rira/entrypoint.sh"
+        cp -al "$action/entrypoint.sh" "$tmp/rira/entrypoint.sh"
         sed "
           /#insert=rm-docker\/Dockerfile/r $workspace/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
-        " Dockerfile.in > "$temp/rira/build.Dockerfile"
+        " "$action/Dockerfile.in" > "$temp/rira/build.Dockerfile"
         echo "#!/bin/sh" > "$temp/rira/run.sh"
         echo "cd /opt/tmp/src" >> "$temp/rira/run.sh"
         echo "$script" >> "$temp/rira/run.sh"
