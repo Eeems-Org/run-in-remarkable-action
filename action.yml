@@ -79,14 +79,20 @@ runs:
           gha=${{ runner.temp }}/rira
         context: ${{ github.workspace }}/.rm-docker-repo
         file: ${{ runner.temp }}/rira/build.Dockerfile
-    - name: Build codexctl
+    - name: Run container
       shell: bash
       run: |
         cd "$workspace"
         docker run \
           --rm \
           -v "$src_path":/src \
-          rm-docker:run-in-remarkable-action
+          rm-docker:run-in-remarkable-action \
+          2>&1 \
+        | while read -r line; do
+          # Make sure output is parsed one line at a time just in case there are
+          # workflow control messages (e.g. ::error:: or ::warning::)
+          echo "$line"
+        done
       env:
         src_path: ${{ inputs.path }}
         workspace: ${{ github.workspace }}
