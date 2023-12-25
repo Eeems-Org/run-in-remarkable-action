@@ -13,7 +13,7 @@ inputs:
     required: false
     default: ''
   path:
-    description: Folder to sync with the device. This will be available at /src
+    description: Folder to sync with the device. This will be available at /opt/tmp/src
     required: false
     default: .
   fw_version:
