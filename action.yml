@@ -60,7 +60,7 @@ runs:
         temp_dir: ${{ runner.temp }}
         action: ${{ github.action_path }}
     - name: Clean old buildx cache
-      if: ${{ input.clean_cache == true || input.clean_cache == 'true' }}
+      if: ${{ inputs.clean_cache == true || inputs.clean_cache == 'true' }}
       shell: bash
       run: |
         docker buildx prune -f
@@ -85,7 +85,7 @@ runs:
         cd "$workspace"
         docker run \
           --rm \
-          -v "$src_path":/src \
+          -v "$(realpath "$src_path")":/src \
           rm-docker:run-in-remarkable-action \
           2>&1 \
         | while read -r line; do
