@@ -15,7 +15,7 @@ inputs:
   path:
     description: Folder to sync with the device. This will be available at /src
     required: false
-    default: ${{ github.workspace }}
+    default: .
   fw_version:
     description: reMarkable OS version to run in
     required: false
@@ -94,5 +94,5 @@ runs:
           echo "$line"
         done
       env:
-        src_path: ${{ inputs.path }}
+        src_path: ${{ inputs.path || '.' }}
         workspace: ${{ github.workspace }}
