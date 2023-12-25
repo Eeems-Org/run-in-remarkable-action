@@ -1,0 +1,26 @@
+name: build
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-basic:
+    name: Test basic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Git repository
+        uses: actions/checkout@v4
+      - uses: ./
+        with:
+          setup: |
+            touch /foo
+          run: |
+            if ! [ -f /foo ]; then
+              echo "::error::/foo missing, did setup not run?"
+              exit 1
+            fi
