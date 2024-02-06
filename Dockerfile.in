@@ -18,6 +18,7 @@ RUN <<EOT
     run_vm.sh -serial null -daemonize
     wait_ssh.sh
     scp /opt/setup.sh root@localhost:/opt/bin
+    ssh root@localhost systemctl start systemd-time-wait-sync
     ssh root@localhost 'bash -l -c setup.sh'
     save_vm.sh
 EOT
@@ -28,6 +29,7 @@ RUN <<EOT
     set -ex
     run_vm.sh -serial null -daemonize
     wait_ssh.sh
+    ssh root@localhost systemctl start systemd-time-wait-sync
     scp /opt/run.sh root@localhost:/opt/bin
     rm /opt/run.sh
     save_vm.sh
