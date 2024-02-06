@@ -11,14 +11,16 @@ RUN <<EOT
     rm -rf /var/lib/apt/lists/*
 EOT
 
+COPY --from=gha wait_for_timesync.sh /opt/wait_for_timesync.sh
 COPY --from=gha setup.sh /opt/setup.sh
 
 RUN <<EOT
     set -ex
     run_vm.sh -serial null -daemonize
     wait_ssh.sh
+    scp /opt/wait_for_timesync.sh root@localhost:/opt/bin
     scp /opt/setup.sh root@localhost:/opt/bin
-    ssh root@localhost systemctl start systemd-time-wait-sync
+    ssh root@localhost 'bash -l -c wait_for_timesync.sh'
     ssh root@localhost 'bash -l -c setup.sh'
     save_vm.sh
 EOT
@@ -29,7 +31,7 @@ RUN <<EOT
     set -ex
     run_vm.sh -serial null -daemonize
     wait_ssh.sh
-    ssh root@localhost systemctl start systemd-time-wait-sync
+    ssh root@localhost 'bash -l -c wait_for_timesync.sh'
     scp /opt/run.sh root@localhost:/opt/bin
     rm /opt/run.sh
     save_vm.sh

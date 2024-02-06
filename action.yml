@@ -41,6 +41,7 @@ runs:
       shell: bash
       run: |
         mkdir -p "$temp_dir/rira"
+        cp -al "$action/wait_for_timesync.sh" "$temp_dir/rira/wait_for_timesync.sh"
         cp -al "$action/entrypoint.sh" "$temp_dir/rira/entrypoint.sh"
         sed "
           /#insert=rm-docker\/Dockerfile/r $workspace/.rm-docker-repo/Dockerfile
