@@ -24,3 +24,7 @@ jobs:
               echo "::error::/foo missing, did setup not run?"
               exit 1
             fi
+            if ! opkg update; then
+              echo "::error::Failed to synch toltec and entware repositories"
+              exit 1
+            fi
