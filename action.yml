@@ -32,7 +32,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: timower/rM-docker
-        ref: 2593f981f0264d0b6dba49192044ce9cd312bfce
+        ref: 100e2796cdc31bf15536fa4fb7e1c18378749418
         fetch-depth: 1
         path: .rm-docker-repo
     - name: Set up Docker Buildx
