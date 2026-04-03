@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-run_vm.sh \
+run_vm \
   -serial null \
   -daemonize
 
-wait_ssh.sh
+wait_ssh
 
 rsync -avr \
   --exclude ".git" \
@@ -18,4 +18,4 @@ ssh root@localhost 'bash -l -c /opt/bin/run.sh'
 
 rsync -avr root@localhost:/opt/tmp/src/. /src
 
-save_vm.sh
+save_vm
