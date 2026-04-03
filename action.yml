@@ -1,4 +1,4 @@
-name: 'Run-in-reMarkable-Action'
+name: "Run-in-reMarkable-Action"
 description: Run a script in a reMarkable tablet QEMU instance
 author: Eeems
 branding:
@@ -11,7 +11,7 @@ inputs:
   setup:
     description: Script to execute during docker image build so that it can be cached between runs
     required: false
-    default: ''
+    default: ""
   path:
     description: Folder to sync with the device. This will be available at /opt/tmp/src
     required: false
@@ -32,7 +32,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: timower/rM-docker
-        ref: c52bdabe8d112b93316ba557e58e4f63415eeb78
+        ref: 4b6a612941cc29adc7ca23c1da38e641655d2ed2
         fetch-depth: 1
         path: .rm-docker-repo
     - name: Set up Docker Buildx
