@@ -16,25 +16,25 @@ COPY --from=gha setup.sh /opt/setup.sh
 
 RUN <<EOT
     set -ex
-    run_vm.sh -serial null -daemonize
-    wait_ssh.sh
+    run_vm -serial null -daemonize
+    wait_ssh
     scp /opt/wait_for_timesync.sh root@localhost:/opt/bin
     scp /opt/setup.sh root@localhost:/opt/bin
     ssh root@localhost 'bash -l -c wait_for_timesync.sh'
     ssh root@localhost 'bash -l -c setup.sh'
-    save_vm.sh
+    save_vm
 EOT
 
 COPY --from=gha run.sh /opt/run.sh
 
 RUN <<EOT
     set -ex
-    run_vm.sh -serial null -daemonize
-    wait_ssh.sh
+    run_vm -serial null -daemonize
+    wait_ssh
     ssh root@localhost 'bash -l -c wait_for_timesync.sh'
     scp /opt/run.sh root@localhost:/opt/bin
     rm /opt/run.sh
-    save_vm.sh
+    save_vm
 EOT
 
 COPY --from=gha entrypoint.sh /opt/bin/entrypoint.sh

@@ -19,7 +19,7 @@ inputs:
   fw_version:
     description: reMarkable OS version to run in
     required: false
-    default: 2.15.1
+    default: 2.15.1.1189
   clean_cache:
     description: Clean the local docker cache before running
     required: false
@@ -47,6 +47,22 @@ runs:
           /#insert=rm-docker\/Dockerfile/r $workspace/.rm-docker-repo/Dockerfile
           /#insert=rm-docker\/Dockerfile/d
         " "$action/Dockerfile.in" > "$temp_dir/rira/build.Dockerfile"
+        sed -ri \
+          's|^(FROM .* AS rootfs)$|\1-builder|' \
+          "$temp_dir/rira/build.Dockerfile"
+        awk -i inplace \
+          '
+            /^RUN uv pip install .*codexctl.* && \\$/ {
+                print "FROM rootfs-builder as rootfs"
+                print "RUN set -e && \\"
+                $1="    ";
+                print $1 "mkdir /tmp/firmware/ && \\"
+                print $0
+                next
+            }
+            { print }
+          ' \
+          "$temp_dir/rira/build.Dockerfile"
         echo "#!/bin/sh" > "$temp_dir/rira/run.sh"
         echo "cd /opt/tmp/src" >> "$temp_dir/rira/run.sh"
         echo "$script" >> "$temp_dir/rira/run.sh"
